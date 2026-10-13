@@ -92,7 +92,7 @@ jobs:
           # Publish the launcher alongside the emulator runtime.
           cp index.html site/index.html
           if [ -f site/assets/images/game-icon.png ]; then sed -i 's#./assets/images/favicon.svg#./assets/images/game-icon.png#' site/index.html; fi
-          cp -R assets site/assets
+          cp -R assets/. site/assets/
           cp biatouchsc_8vr9ermj.jar site/
           cp README.md site/
           if [ -d original-port ]; then cp -R original-port site/; fi
