@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'assets/**'
+      - 'reference/**'
+      - 'README.md'
       - 'original-port/**'
       - 'game/**'
       - '.github/workflows/pages.yml'
