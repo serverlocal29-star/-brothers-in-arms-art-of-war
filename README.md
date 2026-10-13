@@ -1,28 +1,22 @@
-# Brothers in Arms: Art of War — Web Port
+# Brothers in Arms: Art of War — Port nativo para navegador
 
-Proyecto web experimental en español, pensado para navegador móvil y escritorio.
+Este repositorio está dedicado al port nativo del juego Java original a HTML5 Canvas y JavaScript. La reconstrucción web anterior se ha retirado.
 
-## Ejecutar
+## Estado actual
 
-La página raíz redirige a la carpeta game/. El juego es estático: no necesita Node, servidor propio, CDN ni dependencias externas.
+**No es todavía una versión jugable.** La base del viewport lógico de 320 × 250 y el adaptador inicial de entradas están en `original-port/`. La lógica original, el decodificador de recursos binarios, los mapas, las colisiones, las armas, los enemigos y las misiones aún deben portarse y verificarse contra el JAR de referencia.
 
-- PC: WASD o flechas para moverse, ratón para apuntar, clic/espacio para disparar, R para recargar, G para granada, 1/2/3 para cambiar arma, P/Esc para pausa.
-- Móvil: joystick táctil y botones en pantalla.
-- Progreso: se guarda localmente en el navegador.
+## Abrir el proyecto
 
-## Alcance
+- Página de estado: [GitHub Pages](https://serverlocal29-star.github.io/-brothers-in-arms-art-of-war/)
+- Código del port nativo: [original-port/](https://github.com/serverlocal29-star/-brothers-in-arms-art-of-war/tree/main/original-port)
 
-Esta es una reconstrucción web experimental jugable de 13 misiones en tres campañas. No es una conversión fiel de todos los mapas, scripts, recursos y cinemáticas del juego Java original ni está afiliada a Ubisoft o Gameloft.
+## Principios del port
 
-## Publicación
+- No ejecutar el JAR dentro de un emulador.
+- No sustituir el juego original por una reconstrucción inventada.
+- Mantener la proporción y el viewport lógico de la versión analizada.
+- Adaptar controles táctiles y mandos Bluetooth sin alterar las acciones originales.
+- No publicar el JAR comercial ni sus recursos extraídos en el repositorio público.
 
-En GitHub, abre Settings → Pages y selecciona Deploy from a branch, rama main, carpeta /(root), y guarda. Luego abre la URL de GitHub Pages que GitHub muestre en esa pantalla.
-
-## Controles y prueba del JAR original
-
-- El prototipo web limita su bucle principal a un objetivo de 20 FPS.
-- Mando estándar: stick izquierdo/cruceta para moverse, stick derecho para apuntar en escritorio, A disparar, B granada, X recargar, Y cambiar arma, LB/RB seleccionar arma y Start pausar. El mapeo depende del mando y del navegador.
-- En móvil hay joystick táctil y botones en pantalla.
-- **JAR original:** el botón de la página abre FreeJ2ME Web, un emulador Java ME en el navegador. Por separado, carga allí tu propio archivo JAR. El repositorio no incluye ni redistribuye el JAR comercial. FreeJ2ME Web requiere conexión a Internet y la compatibilidad del título debe probarse.
-
-Esta implementación web experimental no equivale todavía a una conversión fiel del juego comercial original.
+La publicación web mostrará el estado real del port hasta que haya una implementación nativa que se pueda probar.
