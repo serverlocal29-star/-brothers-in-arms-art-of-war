@@ -52,6 +52,6 @@ test('physics resource: selects a length-prefixed block by indexed offset', () =
 
 test('malformed data is rejected instead of reading outside the resource', () => {
   assert.throws(() => readIndexedResource(Uint8Array.from([3, 0, 0]), 'broken'), /offset table/);
-  assert.throws(() => readScriptResource(Uint8Array.from([1, 1, 1, 0, 0, 0, 0, 0, 0])), /truncated|invalid/i);
+  assert.throws(() => readScriptResource(Uint8Array.from([1, 1, 1, 0])), /truncated|invalid/i);
   assert.throws(() => readPhysicsBlock(Uint8Array.from([1, 0, 0, 0, 0]), 3), /invalid block index/);
 });
