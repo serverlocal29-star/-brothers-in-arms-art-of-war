@@ -1,4 +1,5 @@
 import { listZipEntries, extractZipEntry } from './zip-reader.mjs';
+import { scanEmbeddedPngs } from './embedded-image-scan.mjs';
 
 const canvas = document.querySelector('#viewport');
 const context = canvas.getContext('2d', { alpha: false });
@@ -8,6 +9,8 @@ const status = document.querySelector('#status');
 const details = document.querySelector('#details');
 const resourceList = document.querySelector('#resources');
 const canvasLabel = document.querySelector('#canvas-label');
+const imageGallery = document.querySelector('#image-gallery');
+let imageObjectUrls = [];
 
 context.imageSmoothingEnabled = false;
 function wrapText(text, x, y, maxWidth, lineHeight) {
@@ -47,11 +50,59 @@ function showResources(entries) {
     li.append(label, value); resourceList.append(li);
   }
 }
+function clearGallery() {
+  for (const url of imageObjectUrls) URL.revokeObjectURL(url);
+  imageObjectUrls = [];
+  imageGallery.replaceChildren();
+}
+async function inspectEmbeddedImages(fileBytes, entries) {
+  clearGallery();
+  const candidateNames = new Set(['dataIGP','spr1','spr2','spr3','spr4','tileset','map','comm','p','sence']);
+  const payloads = [];
+  for (const entry of entries) {
+    if (!candidateNames.has(entry.name)) continue;
+    payloads.push({ name: entry.name, bytes: new Uint8Array(await extractZipEntry(fileBytes, entry)) });
+  }
+  const candidates = scanEmbeddedPngs(payloads);
+  let shown = 0;
+  for (const candidate of candidates) {
+    if (shown >= 48) break;
+    try {
+      const blob = new Blob([candidate.bytes], { type: 'image/png' });
+      const bitmap = await createImageBitmap(blob);
+      const url = URL.createObjectURL(blob);
+      imageObjectUrls.push(url);
+      const card = document.createElement('article');
+      card.className = 'image-card';
+      const image = document.createElement('img');
+      image.src = url;
+      image.alt = 'PNG incrustado detectado en ' + candidate.source;
+      image.loading = 'lazy';
+      const label = document.createElement('div');
+      label.className = 'image-meta';
+      label.textContent = candidate.source + ' · ' + candidate.width + '×' + candidate.height + ' · offset ' + candidate.offset;
+      card.append(image, label);
+      imageGallery.append(card);
+      bitmap.close?.();
+      shown++;
+    } catch {
+      // A matching signature is not enough: only browser-decodable PNGs are shown.
+    }
+  }
+  if (!shown) {
+    const note = document.createElement('p');
+    note.className = 'muted';
+    note.textContent = 'No se encontraron PNG completos dentro de los recursos binarios inspeccionados. Esto no significa que no haya sprites: pueden estar codificados en formatos propios.';
+    imageGallery.append(note);
+  }
+  return shown;
+}
 async function loadJar(file) {
   if (!file) return;
   pickButton.disabled = true;
   setStatus('Leyendo el JAR localmente…');
   details.hidden = true;
+  clearGallery();
   try {
     if (!/\.jar$/i.test(file.name)) throw new Error('Selecciona el archivo .jar original.');
     const bytes = await file.arrayBuffer();
@@ -69,12 +120,14 @@ async function loadJar(file) {
     context.drawImage(bitmap, 0, 0, 320, 250); bitmap.close?.();
     canvasLabel.textContent = 'Splash original extraído en memoria del JAR seleccionado';
     showResources(entries);
+    const embeddedCount = await inspectEmbeddedImages(bytes, entries);
+    document.querySelector('#embedded-count').textContent = embeddedCount + ' imágenes PNG válidas';
     details.hidden = false;
     document.querySelector('#midlet-name').textContent = midlet;
     document.querySelector('#midlet-version').textContent = version;
     document.querySelector('#entry-count').textContent = entries.length + ' entradas ZIP';
     document.querySelector('#jar-size').textContent = (file.size / 1024).toFixed(1) + ' KB';
-    setStatus('JAR leído correctamente en este dispositivo. No se ha subido a ningún servidor.', 'success');
+    setStatus('JAR leído correctamente. ' + embeddedCount + ' PNG incrustados se pudieron decodificar; todo sigue local en este dispositivo.', 'success');
   } catch (error) {
     drawBootScreen('BOOT / READY', 'Selecciona el JAR original para comprobar los recursos locales.');
     setStatus(error instanceof Error ? error.message : 'No se pudo leer el JAR.', 'error');
