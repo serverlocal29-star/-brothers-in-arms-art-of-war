@@ -1,26 +1,30 @@
-# Brothers in Arms: Art of War — proyecto web
+# Brothers in Arms: Art of War — web launcher
 
-Port experimental del juego Java ME a una implementación nativa de navegador. La página pública ofrece la descarga del JAR aportado por el usuario y un acceso al emulador Java ME externo.
+Sitio web para abrir la versión Java ME original del juego dentro de la misma página mediante FreeJ2ME-Web. El emulador queda integrado detrás del lanzador; no se envía al jugador a la página principal de FreeJ2ME.
 
 ## Enlaces
 - **Web:** https://serverlocal29-star.github.io/-brothers-in-arms-art-of-war/
-- **Descarga directa del JAR:** https://serverlocal29-star.github.io/-brothers-in-arms-art-of-war/biatouchsc_8vr9ermj.jar
 - **Repositorio:** https://github.com/serverlocal29-star/-brothers-in-arms-art-of-war
-- **Emulador:** https://zb3.github.io/freej2me-web/
+- **JAR original incluido:** https://serverlocal29-star.github.io/-brothers-in-arms-art-of-war/biatouchsc_8vr9ermj.jar
+- **Proyecto del motor:** https://github.com/zb3/freej2me-web
 
-## Cómo jugar en iPhone
-1. Abre la web del proyecto y pulsa **JUGAR** o **DESCARGAR JAR**.
-2. Si el navegador guarda el JAR en Archivos, abre FreeJ2ME Web.
-3. Importa el JAR en el emulador. La página web no puede arrancar por sí sola un MIDlet Java ME: necesita el runtime del emulador.
+## Cómo funciona
+- La portada usa el icono del juego extraído del JAR cuando el archivo incluye un PNG compatible; el favicon del proyecto sirve como alternativa.
+- Al tocar el icono, se carga `emulator/run.html?app=8vr9ermj&fractionScale=1&mobile=1` dentro de un iframe a pantalla completa de la página.
+- `mobile=1` activa el teclado táctil que incluye FreeJ2ME-Web. No se debe ocultar: los botones virtuales son parte de los controles.
+- El flujo de GitHub Actions copia los archivos de FreeJ2ME-Web al sitio, crea el paquete `apps/8vr9ermj.zip` con configuración del juego y publica el sitio en GitHub Pages.
+- FreeJ2ME-Web depende de CheerpJ alojado externamente, por lo que la ejecución necesita conexión a Internet y puede tardar en iniciar.
 
-## Estado real
-La web está publicada como lanzador/descargador del JAR. **No es todavía un port nativo jugable ni una integración de arranque directo dentro de FreeJ2ME.** La variante JAR puede ser táctil, pero los controles y la orientación deben verificarse en el emulador; no se garantiza un rendimiento de 20 FPS.
+## Limitaciones que deben probarse
+Una compilación exitosa de Pages solo confirma que los archivos se publicaron; no demuestra por sí sola que el MIDlet haya llegado al menú ni que todas las misiones funcionen. El bloqueo de orientación y la API de pantalla completa dependen del navegador; en iPhone puede ser necesario girar el dispositivo manualmente o añadir el sitio a la pantalla de inicio.
 
-El port nativo de original-port/ sigue siendo experimental y no está terminado. Faltan la reconstrucción y validación del bucle de juego, escenas, mapas, colisiones, enemigos, armas, audio y misiones.
+El directorio `original-port/` contiene experimentos de port nativo y no es todavía una reimplementación completa del juego.
 
-## Pruebas
+## Pruebas locales
 Con Node.js 20 o compatible:
 
-    node --test original-port/*.test.mjs
+```sh
+node --test original-port/*.test.mjs
+```
 
-Proyecto de aficionados no afiliado a Gameloft. Las marcas y el juego pertenecen a sus titulares.
+Proyecto de aficionados no afiliado a Gameloft. El juego, sus marcas y recursos pertenecen a sus titulares.
