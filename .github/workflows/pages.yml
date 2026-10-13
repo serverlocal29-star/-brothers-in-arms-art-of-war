@@ -1,4 +1,4 @@
-name: Publish native browser port to GitHub Pages
+name: Publish game launcher and embedded Java ME runtime
 on:
   workflow_dispatch:
   push:
@@ -6,7 +6,7 @@ on:
     paths:
       - 'index.html'
       - 'assets/**'
-      - 'reference/**'
+      - 'biatouchsc_8vr9ermj.jar'
       - 'README.md'
       - 'original-port/**'
       - 'game/**'
@@ -27,18 +27,58 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Node.js for native port tests
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Test native resource readers
         run: node --test original-port/*.test.mjs
+      - name: Build self-hosted FreeJ2ME runtime and direct game package
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 https://github.com/zb3/freej2me-web.git /tmp/freej2me-web
+          mkdir -p site/emulator/apps
+          cp -R /tmp/freej2me-web/web/. site/emulator/
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile, base64
+          root = Path('.')
+          app = Path('/tmp/bia-app')
+          (app/'config').mkdir(parents=True, exist_ok=True)
+          (app/'rms').mkdir(parents=True, exist_ok=True)
+          (app/'app.jar').write_bytes((root/'biatouchsc_8vr9ermj.jar').read_bytes())
+          (app/'name').write_text('Brothers in Arms Art of War', encoding='utf-8')
+          icon = base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAA3BJREFUaEPVmT2O1EAQhZeIiICEG4BEgEiISMjJEByAgJCAbLQJMVoJJBLusMlGnIADkEBEwAk4AYnxs/hGj6Jn2v034JVaXntm7fd1vaqu9l47Ozub5rHpHwFseWxa/OKeLc/+aQAePLwz+eg8aeMjIPG716/2Q+cdIcYC3Lh1fXrzbjddXr5fxpdvn6bd26dLRDpBnBZgAMR4APf/gEiMB5D/Hz+7twzygUjo2Gin8QASSRIDoaOuKScaIfoCKGl9aHY9iYmGrneC6AMQRbvvHUCzTRSAaLRTG4ALx+fxuPh+Lp0SKhgNLOWfVdqpDiAKf/7y/nT+4dFfQ9cdSCASGgdAFRDlABKv2ZQ4hF9cPZlyQ4ASGCN09/bNP67rOwWVqQwA8QL4+P3FMlLC42cuPvZGOgfC82UlxHoAbKMZdIAolnOOOfEAAUFSdwVw8ZQ/h/j683wfDYRzLQJgvRgJAMiTYQAkJpXl84+LSSMFIZgIoHP9re7jEA4gK3UD8NnXQ3n4Eonf5fEQhPLDASRyqTjz39GV6prngX+2omPN50AEKIFwABYuHbkHwmMiE5luADycBzNLOTtp9mMUAMBCisDePnN0Cnuj4xFg9v2hEu+lUyIdDDvpqO/5IpdaB2TFZaMzi5f3u64DAtDs6CGIlCgvlTonL/hO/DxCpFZi1oCTAVB1WMwUiX3PP0cpLnIepVhKNfuVTV3eQociIIAaiFgE4iZnZflkT90O4PWffDgUCZLemzwAKhq5/HshcsBLHzlABDwSVJxjdqKZA0L3rrRPHQClUR5P2QgIF6gkJyf0+6E9cqF91gEoCvst4PxwB4iNm5dXX7G9ggHAYtW4N87ngAOk+v9UW83mxsV6FfJtZYN98hHQLEUAiSIKqb2A78zibMfySWteWPv9rV6+FzoGgVhPXp99t1Hse2jsKqvPujKqZsoBYk+U2gfTJ/nq7AlN9+n1v6B9ju9U8xHIQbhgb/Kwy0Dx+RzwdjZaif7IhUbRlEs6Tt/A0D40zH4ZgEeCxEYQMF7f8bxbxksn74kqan9ZEsdNBSJYpZnd+FrRIbnHfwEQxbgt4u/Rgp0Sty0CK7Z5yf++DBBfngO14skfdl2Nvv93EWisOKnIrlsHWmY+5kyPe9k9TgfQWfj6VmLQg7fxb9YTwG/bQr8A5tSwHMVwHJ0AAAAASUVORK5CYII=')
+          (app/'icon').write_bytes(icon)
+          (app/'rms'/'BIA3').write_bytes(base64.b64decode('AAIAAgABANUAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA='))
+          (app/'config'/'settings.conf').write_text('queuedPaint:off\nrotate:on\ntextureDisableFilter:off\nphone:Nokia\ndgFormat:4444\nsound:on\nwidth:352\nfps:20\nforceFullscreen:on\nfontSize:0\nheight:416\n', encoding='utf-8')
+          (app/'config'/'appproperties.conf').write_text('MIDlet-Vendor:Gameloft SA\nMIDlet-Version:1.0.1\nCreated-By:1.4.2 (Sun Microsystems Inc.)\nManifest-Version:1.0\nMIDlet-Icon:/icon.png\nMicroEdition-Configuration:CLDC-1.0\nMIDlet-1:Brothers in Arms Art of War, /icon.png, GloftBIAH\nMIDlet-Name:Brothers in Arms Art of War\nMicroEdition-Profile:MIDP-2.0\n', encoding='utf-8')
+          (app/'config'/'systemproperties.conf').write_text('', encoding='utf-8')
+          with zipfile.ZipFile('site/emulator/apps/8vr9ermj.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for p in app.rglob('*'):
+                  if p.is_file(): z.write(p, p.relative_to(app).as_posix())
+          PY
+          # Run the game directly; remove emulator keypad overlays so the game's own touch UI remains visible.
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('site/emulator/run.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('</style>', '\n    /* Embedded touch-game mode: do not display the emulator's virtual keypad. */\n    #left-keys, #right-keys { display: none !important; }\n    #screen-area { left: 0 !important; right: 0 !important; bottom: 0 !important; }\n    body { overflow: hidden; background: #000; }\n    </style>')
+          p.write_text(s, encoding='utf-8')
+          PY
+          # Publish the launcher alongside the emulator runtime.
+          cp index.html site/index.html
+          cp -R assets site/assets
+          cp biatouchsc_8vr9ermj.jar site/
+          cp README.md site/
+          if [ -d original-port ]; then cp -R original-port site/; fi
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: site
       - name: Deploy to Pages
         id: deployment
         uses: actions/deploy-pages@v4
