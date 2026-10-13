@@ -1,11 +1,11 @@
-name: Publish static web port to GitHub Pages
+name: Publish native browser port to GitHub Pages
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths:
       - 'index.html'
-      - 'game/**'
+      - 'original-port/**'
       - '.github/workflows/pages.yml'
 permissions:
   contents: read
