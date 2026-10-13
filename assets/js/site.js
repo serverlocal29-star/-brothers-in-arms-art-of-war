@@ -1,8 +1,1 @@
-(() => {
-  const button = document.querySelector('#start-project');
-  if (!button) return;
-  button.addEventListener('click', () => {
-    // Entra al espacio técnico; no se presenta como una partida jugable.
-    window.location.href = './original-port/#web-runner';
-  });
-})();
+(()=>{const button=document.getElementById('start-game');if(!button)return;button.addEventListener('click',()=>{const jar=document.createElement('a');jar.href='./biatouchsc_8vr9ermj.jar';jar.download='Brothers_in_Arms_Art_of_War.jar';jar.hidden=true;document.body.appendChild(jar);jar.click();jar.remove();window.location.href='https://zb3.github.io/freej2me-web/';});})();
