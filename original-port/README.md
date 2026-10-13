@@ -4,7 +4,7 @@
 
 Port the uploaded `Brothers in Arms: Art of War` MIDlet to browser-native JavaScript/Canvas/WebAudio. Do **not** execute the original JAR, embed a Java ME emulator, or use the existing fan-made gameplay reconstruction as the game implementation.
 
-The current `game/` page is the earlier prototype and is not the target implementation. Keep it available until the original port can replace it without losing a playable fallback.
+The earlier non-native `game/` prototype has been removed from the published repository as requested. The default page points to this port-only area; it is currently a status page, not a playable game.
 
 ## Confirmed facts from the supplied JAR
 
@@ -27,7 +27,7 @@ The current `game/` page is the earlier prototype and is not the target implemen
 3. **Rebuild the renderer.** Decode and draw the original assets at the original logical resolution; keep a pixel-accurate 320 × 250 viewport and scale it responsively.
 4. **Port input.** Map modern touch controls and Gamepad API buttons to the original game actions. Support held and repeated input where the original expects it.
 5. **Validate against the JAR.** Compare screenshots, animation timing, level progression, collisions, damage, weapon behavior and audio against the original on known scenes. Mark each subsystem complete only after a comparison test.
-6. **Replace the default page only when playable.** The old reconstruction must not be labelled or presented as the original port.
+6. **Publish gameplay only when playable.** The removed reconstruction must not be labelled or presented as the original port.
 
 ## Asset and distribution policy
 
