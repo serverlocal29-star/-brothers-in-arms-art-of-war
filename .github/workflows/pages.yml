@@ -1,16 +1,14 @@
-name: Publish native browser port to GitHub Pages
+name: Publish STAR launcher
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, star-web-port]
     paths:
       - 'index.html'
-      - 'assets/**'
-      - 'reference/**'
       - 'README.md'
-      - 'original-port/**'
-      - 'game/**'
+      - '.gitmodules'
       - '.github/workflows/pages.yml'
+      - 'emulator/**'
 permissions:
   contents: read
   pages: write
@@ -22,21 +20,16 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: \${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Node.js for native port tests
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
         with:
-          node-version: 20
-      - name: Test native resource readers
-        run: node --test original-port/*.test.mjs
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-      - name: Upload site artifact
-        uses: actions/upload-pages-artifact@v3
+          submodules: recursive
+      - name: Verify emulator entrypoint
+        run: test -f emulator/web/index.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: .
       - name: Deploy to Pages
