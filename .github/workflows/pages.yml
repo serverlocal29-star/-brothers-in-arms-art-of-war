@@ -64,8 +64,30 @@ jobs:
           from pathlib import Path
           p=Path('site/emulator/run.html')
           s=p.read_text(encoding='utf-8')
-          s=s.replace('</style>', '<style>#left-keys,#right-keys{display:none!important}#screen-area{left:0!important;right:0!important;bottom:0!important}body{overflow:hidden;background:#000}</style>')
+          s=s.replace('</style>', '<style>html,body{width:100%;height:100%;overflow:hidden;background:#000;overscroll-behavior:none;touch-action:manipulation}#display{touch-action:none;image-rendering:pixelated}#left-keys,#right-keys{z-index:5;touch-action:manipulation}.key{min-width:36px;min-height:36px;touch-action:manipulation}</style>')
           p.write_text(s, encoding='utf-8')
+          PY
+          # Extract the real game icon from the original MIDlet JAR for the launcher.
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import shutil
+          jar = Path('biatouchsc_8vr9ermj.jar')
+          out = Path('site/assets/images/game-icon.png')
+          out.parent.mkdir(parents=True, exist_ok=True)
+          with ZipFile(jar) as z:
+              names = z.namelist()
+              candidates = [n for n in names if Path(n).name.lower() in ('icon.png','icon.gif','icon.jpg','icon.jpeg')]
+              if not candidates:
+                  candidates = [n for n in names if n.lower().endswith(('.png','.gif','.jpg','.jpeg')) and ('icon' in Path(n).name.lower() or 'logo' in Path(n).name.lower())]
+              if candidates:
+                  selected = candidates[0]
+                  suffix = Path(selected).suffix.lower()
+                  out = out.with_suffix(suffix)
+                  out.write_bytes(z.read(selected))
+                  print(f'Launcher icon extracted from {selected} -> {out}')
+              else:
+                  print('No standalone icon found in JAR; keep existing launcher artwork fallback')
           PY
           # Publish the launcher alongside the emulator runtime.
           cp index.html site/index.html
