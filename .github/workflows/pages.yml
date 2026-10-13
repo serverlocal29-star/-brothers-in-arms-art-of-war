@@ -79,7 +79,7 @@ jobs:
               names = z.namelist()
               candidates = [n for n in names if Path(n).name.lower() in ('icon.png','icon.gif','icon.jpg','icon.jpeg')]
               if not candidates:
-                  candidates = [n for n in names if n.lower().endswith(('.png','.gif','.jpg','.jpeg')) and ('icon' in Path(n).name.lower() or 'logo' in Path(n).name.lower())]
+                  candidates = [n for n in names if n.lower().endswith('.png') and ('icon' in Path(n).name.lower() or 'logo' in Path(n).name.lower())]
               if candidates:
                   selected = candidates[0]
                   suffix = Path(selected).suffix.lower()
@@ -91,6 +91,7 @@ jobs:
           PY
           # Publish the launcher alongside the emulator runtime.
           cp index.html site/index.html
+          if [ -f site/assets/images/game-icon.png ]; then sed -i 's#./assets/images/favicon.svg#./assets/images/game-icon.png#' site/index.html; fi
           cp -R assets site/assets
           cp biatouchsc_8vr9ermj.jar site/
           cp README.md site/
