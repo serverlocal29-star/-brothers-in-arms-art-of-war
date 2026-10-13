@@ -89,7 +89,7 @@
     nativeRAF(pollGamepads);
   }
 
-  window.addEventListener('gamepadconnected', (event) => {
+  document.addEventListener('DOMContentLoaded', () => {\n    const originalBtn = document.getElementById('originalBtn');\n    if (originalBtn) originalBtn.addEventListener('click', () => {\n      window.open('https://zb3.github.io/freej2me-web/', '_blank', 'noopener,noreferrer');\n    });\n  });\n\n  window.addEventListener('gamepadconnected', (event) => {
     const help = document.getElementById('controllerHelp');
     if (help) help.textContent = 'Mando conectado: ' + event.gamepad.id + ' · objetivo 20 FPS.';
   });
