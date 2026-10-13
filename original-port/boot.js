@@ -1,5 +1,6 @@
 import { listZipEntries, extractZipEntry } from './zip-reader.mjs';
 import { scanEmbeddedPngs } from './embedded-image-scan.mjs';
+import { OriginalInputAdapter } from './input-adapter.js';
 
 const canvas = document.querySelector('#viewport');
 const context = canvas.getContext('2d', { alpha: false });
@@ -10,6 +11,12 @@ const details = document.querySelector('#details');
 const resourceList = document.querySelector('#resources');
 const canvasLabel = document.querySelector('#canvas-label');
 const imageGallery = document.querySelector('#image-gallery');
+const touchControls = document.querySelector('#touch-controls');
+const touchToggle = document.querySelector('#touch-toggle');
+const inputAdapter = new OriginalInputAdapter(
+  key => window.dispatchEvent(new CustomEvent('original-port:keydown', { detail: { key } })),
+  key => window.dispatchEvent(new CustomEvent('original-port:keyup', { detail: { key } }))
+);
 let imageObjectUrls = [];
 
 context.imageSmoothingEnabled = false;
@@ -136,7 +143,33 @@ async function loadJar(file) {
   }
 }
 
+// Touch input emits normalized original-keypad events for the gameplay runtime to consume.
+// The current page is still a resource/boot diagnostic, so these events do not move a player yet.
+function syncTouchVisibility() {
+  touchControls.hidden = !touchToggle.checked;
+}
+touchToggle.addEventListener('change', syncTouchVisibility);
+syncTouchVisibility();
+touchControls.querySelectorAll('[data-action]').forEach(button => {
+  const action = button.dataset.action;
+  const press = event => {
+    event.preventDefault();
+    inputAdapter.setAction(action, true);
+    try { button.setPointerCapture(event.pointerId); } catch {}
+  };
+  const release = event => {
+    event.preventDefault();
+    inputAdapter.setAction(action, false);
+  };
+  button.addEventListener('pointerdown', press);
+  button.addEventListener('pointerup', release);
+  button.addEventListener('pointercancel', release);
+  button.addEventListener('lostpointercapture', () => inputAdapter.setAction(action, false));
+  button.addEventListener('contextmenu', event => event.preventDefault());
+});
+window.addEventListener('blur', () => inputAdapter.releaseAll());
+document.addEventListener('visibilitychange', () => { if (document.hidden) inputAdapter.releaseAll(); });
 pickButton.addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', () => loadJar(fileInput.files?.[0]));
 drawBootScreen('NATIVE WEB BOOT', 'Carga tu archivo JAR original para validar sus recursos y mostrar su pantalla inicial.');
-setStatus('Port nativo iniciado. Esperando el JAR original.');
+setStatus('Port nativo iniciado. Controles táctiles conectados como eventos de entrada; la lógica de juego aún no está portada. Esperando el JAR original.');
