@@ -12,7 +12,7 @@ Sitio web para abrir la versión Java ME original del juego dentro de la misma p
 - La portada usa el icono del juego extraído del JAR cuando el archivo incluye un PNG compatible; el favicon del proyecto sirve como alternativa.
 - Al tocar el icono, se carga `emulator/run.html?app=8vr9ermj&fractionScale=1&mobile=1` dentro de un iframe a pantalla completa de la página.
 - `mobile=1` activa el teclado táctil que incluye FreeJ2ME-Web. No se debe ocultar: los botones virtuales son parte de los controles.
-- El flujo de GitHub Actions copia los archivos de FreeJ2ME-Web al sitio, crea el paquete `apps/8vr9ermj.zip` con configuración del juego y publica el sitio en GitHub Pages.
+- El flujo de GitHub Actions copia los archivos de FreeJ2ME-Web al sitio, crea el paquete `apps/8vr9ermj.zip` con configuración del juego, conserva los controles táctiles del runtime y publica el sitio en GitHub Pages.
 - FreeJ2ME-Web depende de CheerpJ alojado externamente, por lo que la ejecución necesita conexión a Internet y puede tardar en iniciar.
 
 ## Limitaciones que deben probarse
