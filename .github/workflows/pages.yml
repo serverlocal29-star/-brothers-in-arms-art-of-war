@@ -64,7 +64,7 @@ jobs:
           from pathlib import Path
           p=Path('site/emulator/run.html')
           s=p.read_text(encoding='utf-8')
-          s=s.replace('</style>', '\n    /* Embedded touch-game mode: do not display the emulator's virtual keypad. */\n    #left-keys, #right-keys { display: none !important; }\n    #screen-area { left: 0 !important; right: 0 !important; bottom: 0 !important; }\n    body { overflow: hidden; background: #000; }\n    </style>')
+          s=s.replace('</style>', '<style>#left-keys,#right-keys{display:none!important}#screen-area{left:0!important;right:0!important;bottom:0!important}body{overflow:hidden;background:#000}</style>')
           p.write_text(s, encoding='utf-8')
           PY
           # Publish the launcher alongside the emulator runtime.
