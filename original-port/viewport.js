@@ -7,8 +7,8 @@ export const LOGICAL_HEIGHT = 250;
 export const LOGICAL_ASPECT = LOGICAL_WIDTH / LOGICAL_HEIGHT;
 
 export function fitViewport(canvas, { width, height } = {}) {
-  const cssWidth = Math.max(1, width ?? canvas.clientWidth ?? LOGICAL_WIDTH);
-  const cssHeight = Math.max(1, height ?? canvas.clientHeight ?? LOGICAL_HEIGHT);
+  const cssWidth = Math.max(1, width ?? canvas.width ?? canvas.clientWidth ?? LOGICAL_WIDTH);
+  const cssHeight = Math.max(1, height ?? canvas.height ?? canvas.clientHeight ?? LOGICAL_HEIGHT);
   const scale = Math.min(cssWidth / LOGICAL_WIDTH, cssHeight / LOGICAL_HEIGHT);
   const drawWidth = Math.floor(LOGICAL_WIDTH * scale);
   const drawHeight = Math.floor(LOGICAL_HEIGHT * scale);
