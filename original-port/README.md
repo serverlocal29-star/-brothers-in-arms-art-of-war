@@ -15,6 +15,8 @@ The current `game/` page is the earlier prototype and is not the target implemen
 - Important classes: `GloftBIA3`, `Z0`, `g`, `a`, `b`, `c`, `d`, `e`, `f`, `h`
 - Packed game resources include `map`, `phy`, `script`, `sence`, `sound`, `spr1`–`spr4`, `tileset`, `dataIGP`, and `p`.
 - `splash.png` is 320 × 250 pixels.
+- The supplied MIDlet's main Canvas paint path explicitly clips and clears a 320 × 250 region. Treat that as the source build's logical render area; preserve its 64:50 aspect ratio. Other published handset variants exist at sizes such as 240 × 320, so do not assume every JAR variant shares this layout.
+- Bytecode inspection confirms the game normalizes several phone-specific key characters to keypad digits before processing them: `e→1`, `r→2`, `t→3`, `d→4`, `f→5`, `g→6`, `x→7`, `c→8`, `v→9`, `?→0`. It also maps MIDP directional game actions to internal bit flags. This is evidence for the input adapter, not yet a complete semantic map of every gameplay action.
 - The supplied build's main Canvas drawing code explicitly clips and clears a 320 × 250 area. Use **320 × 250 as the initial logical viewport**, preserve its aspect ratio, and upscale with nearest-neighbour rendering. Do not stretch the original frame to 16:9.
 - The JAR also uses keypad and MIDP Canvas game-action input. Input mappings must be ported from the original bytecode, not inferred from the fan-made prototype.
 
