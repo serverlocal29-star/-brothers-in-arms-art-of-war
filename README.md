@@ -1,22 +1,37 @@
-# Brothers in Arms: Art of War — Port nativo para navegador
+# Brothers in Arms: Art of War — proyecto web
 
-Este repositorio está dedicado al port nativo del juego Java original a HTML5 Canvas y JavaScript. La reconstrucción web anterior se ha retirado.
+Port experimental del juego Java ME a una implementación nativa de navegador. La portada pública y el entorno técnico están separados.
 
-## Estado actual
+## Enlaces
+- **Web:** https://serverlocal29-star.github.io/-brothers-in-arms-art-of-war/
+- **Diagnóstico técnico:** https://serverlocal29-star.github.io/-brothers-in-arms-art-of-war/original-port/
+- **Repositorio:** https://github.com/serverlocal29-star/-brothers-in-arms-art-of-war
 
-**No es todavía una versión jugable.** La base del viewport lógico de 320 × 250 y el adaptador inicial de entradas están en `original-port/`. La lógica original, el decodificador de recursos binarios, los mapas, las colisiones, las armas, los enemigos y las misiones aún deben portarse y verificarse contra el JAR de referencia.
+## Estado real
+**Todavía no es jugable.** La portada no simula una partida ni abre un emulador externo. START lleva al área técnica del proyecto.
 
-## Abrir el proyecto
+Existen lectores de recursos ZIP/binarios con pruebas automatizadas, documentación de formatos investigados y una base de adaptación de entradas. Falta reconstruir y validar el bucle de juego, la lógica, las escenas, mapas, colisiones, enemigos, armas, audio y misiones.
 
-- Página de estado: [GitHub Pages](https://serverlocal29-star.github.io/-brothers-in-arms-art-of-war/)
-- Código del port nativo: [original-port/](https://github.com/serverlocal29-star/-brothers-in-arms-art-of-war/tree/main/original-port)
+## Estructura
+- `index.html`: portada pública.
+- `assets/css/site.css`: estilos de la web.
+- `assets/js/site.js`: navegación de portada.
+- `assets/images/favicon.svg`: icono del sitio.
+- `original-port/`: lectores, adaptadores, documentación y pruebas del port nativo.
+- `reference/legacy-locales/`: cadenas antiguas de interfaz conservadas como referencia; no son un juego activo.
+- `.github/workflows/pages.yml`: pruebas y despliegue a GitHub Pages.
 
-## Principios del port
+## Pruebas
+Con Node.js 20 o compatible:
+```sh
+node --test original-port/*.test.mjs
+```
+GitHub Actions ejecuta las pruebas antes de publicar.
 
-- No ejecutar el JAR dentro de un emulador.
-- No sustituir el juego original por una reconstrucción inventada.
-- Mantener la proporción y el viewport lógico de la versión analizada.
-- Adaptar controles táctiles y mandos Bluetooth sin alterar las acciones originales.
-- No publicar el JAR comercial ni sus recursos extraídos en el repositorio público.
+## Criterios
+- No llamar jugable al proyecto hasta validar una partida real.
+- No sustituir el juego por misiones inventadas ni presentar un emulador externo como port.
+- No publicar el JAR propietario ni recursos extraídos en este repositorio público.
+- Mantener la proporción lógica de la versión analizada y validar los controles con pruebas.
 
-La publicación web mostrará el estado real del port hasta que haya una implementación nativa que se pueda probar.
+Proyecto de aficionados no afiliado a Gameloft. Las marcas y el juego pertenecen a sus titulares.
