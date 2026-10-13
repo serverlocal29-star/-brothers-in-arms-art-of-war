@@ -22,7 +22,7 @@ The earlier non-native `game/` prototype has been removed from the published rep
 
 ## Porting stages
 
-1. **Reverse-engineer the binary formats.** Document how the original code reads each packed resource; identify sprite frames, tile maps, level scripts, collision/physics data, audio and scene transitions.
+1. **Reverse-engineer the binary formats.** Initial bounds-checked JavaScript readers now exist for the shared indexed container, `script` directory and length-prefixed `phy` blocks. The observed layouts and remaining unknowns are documented in [resource-formats.md](./resource-formats.md); synthetic tests are in [resource-reader.test.mjs](./resource-reader.test.mjs). Runtime cadence and input edge behavior are documented in [runtime-contract.md](./runtime-contract.md). Sprite/tile payload decoding, map interpretation, audio and scene transitions remain incomplete.
 2. **Recover original logic.** Decompile/disassemble the classes and translate the game loop, player, enemies, weapons, missions, UI, transitions and special vehicle/parachute sequences into maintainable JavaScript modules.
 3. **Rebuild the renderer.** Decode and draw the original assets at the original logical resolution; keep a pixel-accurate 320 × 250 viewport and scale it responsively.
 4. **Port input.** Map modern touch controls and Gamepad API buttons to the original game actions. Support held and repeated input where the original expects it.
