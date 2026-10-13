@@ -25,7 +25,7 @@ The earlier non-native `game/` prototype has been removed from the published rep
 1. **Reverse-engineer the binary formats.** Initial bounds-checked JavaScript readers now exist for the shared indexed container, `script` directory and length-prefixed `phy` blocks. The observed layouts and remaining unknowns are documented in [resource-formats.md](./resource-formats.md); synthetic tests are in [resource-reader.test.mjs](./resource-reader.test.mjs). Runtime cadence and input edge behavior are documented in [runtime-contract.md](./runtime-contract.md). Sprite/tile payload decoding, map interpretation, audio and scene transitions remain incomplete.
 2. **Recover original logic.** Decompile/disassemble the classes and translate the game loop, player, enemies, weapons, missions, UI, transitions and special vehicle/parachute sequences into maintainable JavaScript modules.
 3. **Rebuild the renderer.** Decode and draw the original assets at the original logical resolution; keep a pixel-accurate 320 × 250 viewport and scale it responsively.
-4. **Port input.** Map modern touch controls and Gamepad API buttons to the original game actions. Support held and repeated input where the original expects it.
+4. **Port input.** A touch-control overlay is now wired to the normalized keypad adapter: directional pad, aim left/right, action/fire, and grenade. It emits `original-port:keydown` / `original-port:keyup` events for the gameplay runtime. These controls are only an input foundation until the gameplay logic consumes them; they do not make the current diagnostic page playable. The online 400×240 “Landscape / Touch” listing appears to be a community touch conversion, so use its control concept as a reference, not as proof that Gameloft shipped an official touch build. Preserve the supplied JAR's confirmed 320×250 logical viewport unless the actual touch-converted JAR is separately inspected.
 5. **Validate against the JAR.** Compare screenshots, animation timing, level progression, collisions, damage, weapon behavior and audio against the original on known scenes. Mark each subsystem complete only after a comparison test.
 6. **Publish gameplay only when playable.** The removed reconstruction must not be labelled or presented as the original port.
 
@@ -37,7 +37,7 @@ The original JAR is user-supplied and proprietary. Do not commit the commercial 
 
 - No JAR execution and no embedded emulator.
 - Original game logic and level/resource data are ported, not invented substitute missions.
-- Touch and Bluetooth controller work.
+- Touch controls and Bluetooth controller work in playable gameplay; touch input adapter/overlay is present, but gameplay wiring and validation remain incomplete.
 - Correct logical resolution/aspect ratio, no unintended cropping or stretching.
 - Tested start-to-finish gameplay, including non-standard mission types.
 - Clear disclosure of anything that remains incomplete.
