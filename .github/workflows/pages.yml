@@ -6,6 +6,7 @@ on:
     paths:
       - 'index.html'
       - 'original-port/**'
+      - 'game/**'
       - '.github/workflows/pages.yml'
 permissions:
   contents: read
