@@ -8,7 +8,7 @@ Port experimental del juego Java ME a una implementación nativa de navegador. L
 - **Repositorio:** https://github.com/serverlocal29-star/-brothers-in-arms-art-of-war
 
 ## Estado real
-**Todavía no es jugable.** La portada no simula una partida ni abre un emulador externo. START lleva al área técnica del proyecto.
+**El port nativo todavía no es jugable.** La página técnica ahora ofrece una ruta alternativa para descargar el JAR alojado y abrir un emulador Java ME externo; el usuario debe seleccionar el archivo manualmente. Esto permite probar el original, pero no equivale a haber terminado la reconstrucción nativa.
 
 Existen lectores de recursos ZIP/binarios con pruebas automatizadas, documentación de formatos investigados y una base de adaptación de entradas. Falta reconstruir y validar el bucle de juego, la lógica, las escenas, mapas, colisiones, enemigos, armas, audio y misiones.
 
@@ -17,7 +17,7 @@ Existen lectores de recursos ZIP/binarios con pruebas automatizadas, documentaci
 - `assets/css/site.css`: estilos de la web.
 - `assets/js/site.js`: navegación de portada.
 - `assets/images/favicon.svg`: icono del sitio.
-- `original-port/`: lectores, adaptadores, documentación y pruebas del port nativo.
+- `original-port/`: lectores, adaptadores, documentación, pruebas del port nativo y acceso al emulador alternativo.
 - `reference/legacy-locales/`: cadenas antiguas de interfaz conservadas como referencia; no son un juego activo.
 - `.github/workflows/pages.yml`: pruebas y despliegue a GitHub Pages.
 
