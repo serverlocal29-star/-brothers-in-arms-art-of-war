@@ -64,7 +64,13 @@ jobs:
           from pathlib import Path
           p=Path('site/emulator/run.html')
           s=p.read_text(encoding='utf-8')
-          s=s.replace('</style>', '<style>html,body{width:100%;height:100%;overflow:hidden;background:#000;overscroll-behavior:none;touch-action:manipulation}#display{touch-action:none;image-rendering:pixelated}#left-keys,#right-keys{z-index:5;touch-action:manipulation}.key{min-width:36px;min-height:36px;touch-action:manipulation}</style>')
+          s=s.replace('</style>', '<style>html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000;overscroll-behavior:none;touch-action:manipulation}#screen-area{inset:0!important;background:#000!important}#display{touch-action:none;image-rendering:pixelated;max-width:100vw;max-height:100dvh}#left-keys,#right-keys{display:none!important;visibility:hidden!important;pointer-events:none!important}.keypad-part{display:none!important}</style>')
+          # Returning/exiting the MIDlet goes back to the game launcher, never the emulator home page.
+          main=Path('site/emulator/src/main.js')
+          if main.exists():
+              code=main.read_text(encoding='utf-8')
+              code=code.replace("location.href = './';", "location.href = '../';")
+              main.write_text(code, encoding='utf-8')
           p.write_text(s, encoding='utf-8')
           PY
           # Extract the real game icon from the original MIDlet JAR for the launcher.
